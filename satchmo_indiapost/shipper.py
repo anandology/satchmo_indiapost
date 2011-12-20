@@ -24,7 +24,7 @@ class Shipper(BaseShipper):
         self.charges = None            
         # Had to edit this so the shipping name did not error out for being more than 30 characters. Old code is commented out.
         #self.id = u'FedEx-%s-%s' % (self.service_type_code, self.service_type_text)
-        self.id = u'%s' % (self.service_type_text)
+        self.id = u'%s' % (self.service_type_code)
                 
     def description(self):
         """
