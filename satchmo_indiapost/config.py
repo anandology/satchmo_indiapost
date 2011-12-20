@@ -16,10 +16,10 @@ config_register_list(
         'SHIPPING_CHOICES',
         description=_('Shipping Choices Available to customers.'),
         choices = (
-                    (('REG_PARCEL','Registered Parcel')),
-                    (('REG_PARCEL_VPP','Registered Parcel - Payment on Delivery')),
                     (('REG_BOOKPOST','Registered Book Post')),
                     (('REG_BOOKPOST_VPP','Registered Book Post - Payment on Delivery')),
+                    (('REG_PARCEL','Registered Parcel')),
+                    (('REG_PARCEL_VPP','Registered Parcel - Payment on Delivery')),
         ),
         default = ('REGBOOKPOST_VPP',)),
     

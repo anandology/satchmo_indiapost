@@ -10,7 +10,7 @@ log = logging.getLogger('indiapost.shipper')
 
 class Shipper(BaseShipper):
     def __init__(self, cart=None, contact=None, service_type=None):
-        
+        print "Shipper", service_type
         self.cart = cart
         self.contact = contact
         self.service_type = service_type
@@ -69,18 +69,42 @@ class Shipper(BaseShipper):
         elif self.service_type_code == "REG_BOOKPOST_VPP":
             # Rs. 1 for 100g + Rs. 17 for registration fee
             postage = math.ceil(weight/100.0)  # Rs. 1 for 100g
-            
+            # special concession for bookpost-vpp if price is less than 50.
             if price <= 20:
                 reg_fee = 2.50
-                vpp_fee = 2.00
             elif price <= 50:
                 reg_fee = 2.50
-                vpp_fee = 2.00
             else:
                 reg_fee = 17
-                vpp_fee = 5
-                
+            vpp_fee = self._vpp_fee(price)
             self.charges = postage + reg_fee + vpp_fee
+        elif self.service_type_code == 'REG_PARCEL':
+            # Rs. 19 for first 500g and Rs. 16 for every 500g thereafter.
+            n = math.ceil(weight/500.0)
+            postage = 19 + (n-1) * 16
+            reg_fee = 17
+            self.charges = postage + reg_fee
+        elif self.service_type_code == 'REG_PARCEL_VPP':
+            # Rs. 19 for first 500g and Rs. 16 for every 500g thereafter.
+            n = math.ceil(weight/500.0)
+            postage = 19 + (n-1) * 16
+            reg_fee = 17
+            
+            if price <= 20:
+                vpp_fee = 2
+            elif price <= 50:
+                vpp_fee = 3
+            else:
+                vpp_fee = 5
+            self.charges = postage + reg_fee + vpp_fee
+            
+    def _vpp_fee(self, price):
+        if price <= 20:
+            return 2.0
+        elif price <= 50:
+            return 3.0
+        else:
+            return 5.0
         
     def _compute_total_weight_price(self, cart):
         """Computes the total weight and total price.
